@@ -1,0 +1,9 @@
+    <form class="block-panel" method="POST">
+      <h2 class="block-panel-heading">Register new account</h2>
+      <input type="text" name="email" class="form-control credentials" placeholder="Email address" value="{{emailValue}}" required="" autofocus="">
+      <p class="validation">{{errorsMsgs.email}}</p>
+      <input type="password" name="password" class="form-control credentials" placeholder="Password" required="">
+      <p class="validation">{{errorsMsgs.password}}</p>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+
