@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { randomColor } = require('../../../helpers/randomColor')
+const { randomColor } = require('../../helpers/randomColor')
 const USR = require('../../models/user')
 
 /**

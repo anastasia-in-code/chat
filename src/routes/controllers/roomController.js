@@ -3,7 +3,7 @@ const MESSAGE = require('../../models/message')
 const USR = require('../../models/user')
 
 const repository = require('../../models/repository')
-const roomMessages = require('../../../helpers/roomMessages')
+const roomMessages = require('../../helpers/roomMessages')
 
 /**
  * function to render room page
@@ -16,8 +16,8 @@ const roomPage = async (req, res, next) => {
 
       const messages = await roomMessages(currentRoom._id.toString())
 
-
       res.render('room', {
+         layout: 'roomslayout',
          title: `Chat | ${currentRoom.name}`,
          name: currentRoom.name,
          messages,
@@ -68,9 +68,7 @@ const sendMessage = async (req, res, next) => {
 
       const io = req.app.get('socketio');
 
-      io.on('connection', socket => {
-         socket.emit('message', 'test')
-      })
+      io.emit('message', req.body.messageText)
 
 
       res.render('room', {

@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator')
-const { availableRooms } = require('../../../helpers/availableRooms')
+const { availableRooms } = require('../../helpers/availableRooms')
 
 /**
  * midleware functions for validating fields in the current Template

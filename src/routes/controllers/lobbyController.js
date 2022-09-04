@@ -1,5 +1,5 @@
 const ROOM = require('../../models/rooms')
-const { availableRooms } = require('../../../helpers/availableRooms')
+const { availableRooms } = require('../../helpers/availableRooms')
 
 /**
  * function to render lobby page

@@ -1,5 +1,5 @@
 
-const { logger } = require('../../../helpers/logger')
+const { logger } = require('../../helpers/logger')
 /**
  * midleware for handling server errors
  * @param {object} err - error object

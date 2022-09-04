@@ -1,3 +1,5 @@
 .env
 combined.log
 error.log
+node_modules
+repository.json

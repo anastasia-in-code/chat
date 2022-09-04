@@ -1,4 +1,4 @@
-const { generateAccessToken } = require('../../../helpers/generateJWT')
+const { generateAccessToken } = require('../../helpers/generateJWT')
 const USR = require('../../models/user')
 
 /**
