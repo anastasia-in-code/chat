@@ -24,10 +24,12 @@ const signInPage = async (req, res, next) => {
  */
 const loginUser = async (req, res, next) => {
    try {
-      const { email } = req.body;
+      console.log(req.cookie)
+      const { email } = req.body
+
       const user = await USR.findOne({ email })
 
-      const token = generateAccessToken(user._id, user.email)
+      const token = generateAccessToken(user._id, user.email, { expiresIn: req.body.remember ? '24h' : '1h' })
 
       res.cookie(`Authorization`, token, { httpOnly: true })
 

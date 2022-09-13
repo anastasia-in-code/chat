@@ -17,6 +17,7 @@ router.post('/signup',
 )
 
 router.get('/signin', signInPage)
+router.get('/', signInPage)
 
 router.post('/signin',
    [requireEmailExists, requireValidPasswordForUser],
@@ -26,11 +27,9 @@ router.post('/signin',
    loginUser
 )
 
-
-// update signout!!!!!!!!!!!!!!!!!!!!!
 router.get('/signout', (req, res) => {
-   req.session = null
-   res.redirect('/signup')
+   res.clearCookie(`Authorization`)
+   res.redirect('/signin')
 })
 
 module.exports = router;

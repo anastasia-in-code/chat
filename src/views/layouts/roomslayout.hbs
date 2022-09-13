@@ -30,11 +30,13 @@
      <script src="/socket.io/socket.io.js"></script>
      <script>  
       let socket = io();
-
       
-      socket.on('message', function(msg) {
-        console.log('Message received from another user!', msg)
+      socket.on('connect', () => {
+         socket.on('message', function(msg) {
+         location.reload();
       });
+      });
+
    </script>
 
    </body>

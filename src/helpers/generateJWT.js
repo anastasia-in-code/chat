@@ -7,12 +7,12 @@ const jwt = require('jsonwebtoken')
  * @param {string} email 
  * @returns JSON WEB Token
  */
-const generateAccessToken = (id, email) => {
+const generateAccessToken = (id, email, exp) => {
    const payload = {
       id,
       email
    }
-   return jwt.sign(payload, process.env.SECRETKEY, { expiresIn: '24h' })
+   return jwt.sign(payload, process.env.SECRETKEY, exp)
 }
 
 module.exports = { generateAccessToken }

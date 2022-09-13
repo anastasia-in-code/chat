@@ -70,7 +70,6 @@ const sendMessage = async (req, res, next) => {
 
       io.emit('message', req.body.messageText)
 
-
       res.render('room', {
          layout: 'roomslayout',
          title: `Chat | ${currentRoom.name}`,

@@ -23,6 +23,7 @@ const authRequired = (req, res, next) => {
 
       next()
    } catch (e) {
+      res.clearCookie(`Authorization`)
       res.redirect('/signin')
    }
 }
