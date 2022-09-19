@@ -29,15 +29,21 @@
 
      <script src="/socket.io/socket.io.js"></script>
      <script>  
-      let socket = io();
+      let socket = io()
       
       socket.on('connect', () => {
          socket.on('message', function(msg) {
-         location.reload();
+         location.reload()
       });
       });
 
    </script>
-
+   <script>
+    function scrollToBottom() {
+        window.scrollTo(0, document.body.scrollHeight)
+    }
+    history.scrollRestoration = "manual"
+    window.onload = scrollToBottom
+   </script>      
    </body>
 </html>

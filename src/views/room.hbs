@@ -1,6 +1,16 @@
  <div class="block-panel">
       <h2 class="block-panel-heading">{{name}}</h2>
-      <div class="row message-input">
+      
+      <div class="panel panel-default">
+        <div class="panel-body chat-body">
+          {{#each messages}}
+          <span class="message"><span class="user" style="color: #{{userColor}}">{{userName}}</span> {{messageText}}</span>
+          {{#if file}}
+          <img class="image" src="data:image/png;base64, {{file}}"/>
+          {{/if}}
+        {{/each}}
+        </div>
+        <div class="row message-input">
         <div class="col-lg-12">
           <form method="POST" enctype="multipart/form-data">
             <div class="field">         
@@ -15,15 +25,5 @@
           </form>
         </div>
       </div>
-      <div class="panel panel-default">
-        <div class="panel-body chat-body">
-          {{#each messages}}
-          <span class="message"><span class="user" style="color: #{{userColor}}">{{userName}}</span> {{messageText}}</span>
-
-          {{#if file}}
-          <img class="image" src="data:image/png;base64, {{file}}"/>
-          {{/if}}
-        {{/each}}
-        </div>
       </div> 
     </div>

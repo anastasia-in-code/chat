@@ -31,10 +31,7 @@ const createNewRoom = async (req, res) => {
 
       await newRoom.save()
 
-      res.render('lobby', {
-         title: 'Chat | Lobby',
-         roomsNames: await availableRooms()
-      })
+      res.redirect('/lobby')
    } catch (e) {
       next(e)
    }

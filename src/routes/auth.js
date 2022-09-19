@@ -17,7 +17,6 @@ router.post('/signup',
 )
 
 router.get('/signin', signInPage)
-router.get('/', signInPage)
 
 router.post('/signin',
    [requireEmailExists, requireValidPasswordForUser],
@@ -30,6 +29,10 @@ router.post('/signin',
 router.get('/signout', (req, res) => {
    res.clearCookie(`Authorization`)
    res.redirect('/signin')
+})
+
+router.get('/', (req, res) => {
+   res.redirect('/lobby')
 })
 
 module.exports = router;

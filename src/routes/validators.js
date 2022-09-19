@@ -42,7 +42,7 @@ module.exports = {
          const validPassord = bcrypt.compareSync(password, user.password)
 
          if (!validPassord) {
-            throw new Error('Invalid password');
+            throw new Error('Email or password is invalid');
 
          }
       }),

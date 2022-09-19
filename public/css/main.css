@@ -46,3 +46,7 @@ body {
 .image {
   width: 100%;
 }
+
+.validation {
+  color: red
+}

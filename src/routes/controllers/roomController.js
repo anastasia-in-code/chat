@@ -64,18 +64,11 @@ const sendMessage = async (req, res, next) => {
          await newMessage.save()
       }
 
-      const messages = await roomMessages(currentRoom._id.toString())
-
       const io = req.app.get('socketio');
 
       io.emit('message', req.body.messageText)
 
-      res.render('room', {
-         layout: 'roomslayout',
-         title: `Chat | ${currentRoom.name}`,
-         name: currentRoom.name,
-         messages
-      })
+      res.redirect(`/lobby${currentRoom.link}`)
    } catch (e) {
       next(e)
    }

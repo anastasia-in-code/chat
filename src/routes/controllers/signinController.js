@@ -24,16 +24,19 @@ const signInPage = async (req, res, next) => {
  */
 const loginUser = async (req, res, next) => {
    try {
-      console.log(req.cookie)
-      const { email } = req.body
+      if (req.headers.cookie) {
+         return res.redirect('/lobby')
+      } else {
+         const { email } = req.body
 
-      const user = await USR.findOne({ email })
+         const user = await USR.findOne({ email })
 
-      const token = generateAccessToken(user._id, user.email, { expiresIn: req.body.remember ? '24h' : '1h' })
+         const token = generateAccessToken(user._id, user.email, { expiresIn: req.body.remember ? '24h' : '1h' })
 
-      res.cookie(`Authorization`, token, { httpOnly: true })
+         res.cookie(`Authorization`, token, { httpOnly: true })
 
-      res.redirect('/lobby')
+         res.redirect('/lobby')
+      }
    } catch (e) {
       next(e)
    }
