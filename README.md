@@ -1,21 +1,9 @@
-# Suggested Urgent FIXes
+.env file is required with following values:
 
-`node_modules` should not be commited into git
+1. DBPATH with path and credentials
+2. SECRETKEY - use random value
 
-Use  `.gitignore`  file in the project root insted
-
-The file's content:
-
-```
-node_modules
-```
-
-## Where is the root page?
-
-http://localhost:3000 shows an error
-
-
-## Env vars
-
-Throw useful errors when smth like `SECRETKEY` or `DBPATH` are not defined
-
+Script:
+"scripts": {
+"dev": "nodemon src/index.js"
+}
