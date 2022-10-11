@@ -1,18 +1,19 @@
-require('dotenv').config()
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const config = require('../../config');
 
 /**
  * function generates JWT token with user ID, user email and secret key
- * @param {string} id 
- * @param {string} email 
+ * @param {string} id
+ * @param {string} email
  * @returns JSON WEB Token
  */
-const generateAccessToken = (id, email, exp) => {
-   const payload = {
-      id,
-      email
-   }
-   return jwt.sign(payload, process.env.SECRETKEY, exp)
-}
+const generateJWT = (id, email, exp) => {
+  const payload = {
+    id,
+    email,
+  };
 
-module.exports = { generateAccessToken }
+  return jwt.sign(payload, config.secretKey, exp);
+};
+
+module.exports = { generateJWT };

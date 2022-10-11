@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs')
-const { randomColor } = require('../../helpers/randomColor')
-const USR = require('../../models/user')
+const bcrypt = require('bcryptjs');
+const { generateColor } = require('../../helpers/generateColor');
+const User = require('../../models/user');
 
 /**
  * function to render the signup page
@@ -8,14 +8,14 @@ const USR = require('../../models/user')
  * @param {object} res - response object
  */
 const signUpPage = (req, res) => {
-   try {
-      res.render('signup', {
-         title: 'Chat | SignUp'
-      })
-   } catch (e) {
-      next(e)
-   }
-}
+  try {
+    res.render('signup', {
+      title: 'Chat | SignUp',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
 
 /**
  * function to register new user
@@ -23,21 +23,21 @@ const signUpPage = (req, res) => {
  * @param {object} res - reqponse object
  */
 const registerNewUser = async (req, res) => {
-   try {
-      const hashPassword = bcrypt.hashSync(req.body.password, 9)
+  try {
+    const hashPassword = bcrypt.hashSync(req.body.password, 9);
 
-      const newUser = new USR({
-         email: req.body.email,
-         password: hashPassword,
-         color: randomColor()
-      })
+    const newUser = new User({
+      email: req.body.email,
+      password: hashPassword,
+      color: generateColor(),
+    });
 
-      await newUser.save()
+    await newUser.save();
 
-      res.redirect('/signin')
-   } catch (e) {
-      next(e)
-   }
-}
+    res.redirect('/signin');
+  } catch (e) {
+    next(e);
+  }
+};
 
-module.exports = { signUpPage, registerNewUser }
+module.exports = { signUpPage, registerNewUser };
