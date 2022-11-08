@@ -1,6 +1,6 @@
+node_modules
 .env
 combined.log
 error.log
-node_modules
 repository.json
 .eslintrc.js
