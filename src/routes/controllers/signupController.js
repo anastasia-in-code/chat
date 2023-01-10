@@ -8,13 +8,9 @@ const User = require('../../models/user');
  * @param {object} res - response object
  */
 const signUpPage = (req, res) => {
-  try {
-    res.render('signup', {
-      title: 'Chat | SignUp',
-    });
-  } catch (e) {
-    next(e);
-  }
+  res.render('signup', {
+    title: 'Chat | SignUp',
+  });
 };
 
 /**
@@ -23,21 +19,24 @@ const signUpPage = (req, res) => {
  * @param {object} res - reqponse object
  */
 const registerNewUser = async (req, res) => {
-  try {
-    const hashPassword = bcrypt.hashSync(req.body.password, 9);
+  const { email, password } = req.body;
 
-    const newUser = new User({
-      email: req.body.email,
-      password: hashPassword,
-      color: generateColor(),
-    });
-
-    await newUser.save();
-
-    res.redirect('/signin');
-  } catch (e) {
-    next(e);
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.send({ error: 'This email already in use' });
   }
+
+  const hashPassword = await bcrypt.hash(password, 9);
+
+  const newUser = new User({
+    email: req.body.email,
+    password: hashPassword,
+    color: generateColor(),
+  });
+
+  await newUser.save();
+
+  res.status(200)
 };
 
 module.exports = { signUpPage, registerNewUser };

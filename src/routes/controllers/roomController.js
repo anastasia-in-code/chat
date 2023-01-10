@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Room = require('../../models/rooms');
 const Message = require('../../models/message');
 const User = require('../../models/user');
@@ -11,8 +12,8 @@ const getRoomMessages = require('../../helpers/getRoomMessages');
  * @param {object} res - response object
  */
 const roomPage = async (req, res, next) => {
-  // try {
-  const currentRoom = await Room.findOne({ link: `/${req.params.room}` });
+  const currentRoom = await Room.findById(req.params.roomId);
+
   if (!currentRoom) {
     res.status(404).send('Not found!');
   }
@@ -24,9 +25,6 @@ const roomPage = async (req, res, next) => {
     name: currentRoom.name,
     messages,
   });
-  // } catch (e) {
-  //   next(e);
-  // }
 };
 
 /**
@@ -35,45 +33,33 @@ const roomPage = async (req, res, next) => {
  * @param {object} res - response object
  */
 const sendMessage = async (req, res, next) => {
-  try {
-    const currentRoom = await Room.findOne({ link: `/${req.params.room}` });
-    const currentUser = await User.findOne({ _id: req.userId });
+  const currentUser = await User.findById(req.userId);
 
-    if (req.file) {
-      const file = await repository.create({ file: req.file.buffer.toString('base64') });
+  const newMessage = new Message(
+    {
+      roomId: req.params.roomId,
+      messageText: req.body.message,
+      userName: `${currentUser.email}:`,
+      userColor: currentUser.color,
+    },
+  );
 
-      const newMessage = new Message(
-        {
-          roomId: currentRoom._id.toString(),
-          messageText: req.body.messageText,
-          messageFileId: file.id,
-          userName: `${currentUser.email}:`,
-          userColor: currentUser.color,
-        },
-      );
-
-      await newMessage.save();
-    } else {
-      const newMessage = new Message(
-        {
-          roomId: currentRoom._id.toString(),
-          messageText: req.body.messageText,
-          userName: `${currentUser.email}:`,
-          userColor: currentUser.color,
-        },
-      );
-
-      await newMessage.save();
-    }
-
-    const io = req.app.get('socketio');
-
-    io.emit('message', req.body.messageText);
-
-    res.redirect(`/lobby${currentRoom.link}`);
-  } catch (e) {
-    next(e);
+  if (req.file) {
+    const savedFile = await repository.create(req.file);
+    newMessage.messageFileId = `${savedFile.id}.${savedFile.format}`;
   }
+
+  await newMessage.save();
+
+  const io = req.app.get('socketio');
+
+  io.emit('message', newMessage);
+
+  res.send(newMessage);
 };
 
-module.exports = { roomPage, sendMessage };
+const attachedFile = async (req, res, next) => {
+  fs.createReadStream(`fileRepository/${req.params.fileId}`).pipe(res);
+};
+
+module.exports = { roomPage, sendMessage, attachedFile };

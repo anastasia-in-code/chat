@@ -6,12 +6,8 @@ const roomSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  link: {
-    type: String,
-    required: true,
-    unique: true,
-  },
 });
+
 const Room = mongoose.model('Room', roomSchema);
 
 module.exports = Room;

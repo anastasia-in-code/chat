@@ -1,25 +1,27 @@
 const express = require('express');
-const { handleValidationErrors } = require('./midleware/handleValidationErrors');
+const multer = require('multer');
+const { newRoomValidation } = require('./midleware/newRoomValidation');
 const { authRequired } = require('./midleware/authRequired');
-const { requireName } = require('./validators');
+const { asyncWrapper } = require('./midleware/asyncWrapper')
 const { lobbyPage, createNewRoom } = require('./controllers/lobbyController');
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
 router.get(
   '/lobby',
   authRequired,
-  lobbyPage,
+  asyncWrapper(lobbyPage),
 );
 
 router.post(
   '/lobby',
-  requireName,
+  upload.single('file'),
   authRequired,
-  handleValidationErrors('lobby', {
-    title: 'Chat | Lobby',
-  }),
-  createNewRoom,
+  newRoomValidation,
+  asyncWrapper(createNewRoom),
+
 );
 
 module.exports = router;

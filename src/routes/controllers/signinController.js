@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const { generateJWT } = require('../../helpers/generateJWT');
 const User = require('../../models/user');
 
@@ -7,13 +8,9 @@ const User = require('../../models/user');
  * @param {object} res - response object
  */
 const signInPage = async (req, res, next) => {
-  try {
-    res.render('signin', {
-      title: 'Chat | SignIn',
-    });
-  } catch (e) {
-    next(e);
-  }
+  res.render('signin', {
+    title: 'Chat | SignIn',
+  });
 };
 
 /**
@@ -22,21 +19,23 @@ const signInPage = async (req, res, next) => {
  * @param {object} res - response object
  */
 const loginUser = async (req, res, next) => {
-  try {
-    if (req.headers.cookie) {
-      return res.redirect('/lobby');
-    }
-    const { email } = req.body;
+  const { email } = req.body;
 
-    const user = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
-    const token = generateJWT(user._id, user.email, { expiresIn: req.body.remember ? '24h' : '1h' });
-
-    res.cookie('Authorization', token, { httpOnly: true });
-
-    res.redirect('/lobby');
-  } catch (e) {
-    next(e);
+  if (!user) {
+    return res.send({ error: 'invalid email or password' });
   }
+
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+
+  if (!validPassword) {
+    return res.send({ error: 'invalid email or password' });
+  }
+
+  const token = generateJWT(user._id, user.email, { expiresIn: req.body.remember ? '24h' : '1h' });
+
+  res.cookie('Authorization', token, { httpOnly: true });
+  res.status(200).json({ success: true });
 };
 module.exports = { signInPage, loginUser };

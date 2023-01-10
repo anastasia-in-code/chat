@@ -2,43 +2,50 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 class Repository {
-  constructor(filename) {
-    this.filename = filename;
-    try {
-      fs.accessSync(this.filename);
-    } catch (err) {
-      fs.writeFileSync(this.filename, '[]');
+  constructor(dir) {
+    this.dir = dir;
+
+    if (!fs.existsSync(this.dir)) {
+      fs.mkdirSync(this.dir);
     }
   }
 
-  async create(attrs) {
-    attrs.id = this.randomId();
+  async create(file) {
+    // eslint-disable-next-line no-param-reassign
+    file.id = this.randomId();
+    // eslint-disable-next-line no-param-reassign
+    file.format = this.getFileFormat(file);
 
-    const records = await this.getAll();
-    records.push(attrs);
-    await this.writeAll(records);
+    await fs.writeFileSync(`${this.dir}/${file.id}.${file.format}`, '');
 
-    return attrs;
+    await this.saveFile(file);
+
+    return file;
   }
 
-  async getAll() {
+  async getOne(id) {
     return JSON.parse(
-      await fs.promises.readFile(this.filename, {
+      await fs.promises.readFile(`${this.dir}/${id}`, {
         encoding: 'utf8',
       }),
     );
   }
 
-  async getOne(id) {
-    const records = await this.getAll();
-    return records.find((record) => record.id === id);
+  async saveFile(file) {
+    const writableStream = fs.createWriteStream(
+      `${this.dir}/${file.id}.${file.format}`,
+    );
+
+    writableStream.write(file.buffer);
+    writableStream.end();
+
+    writableStream.on('error', (err) => console.log(err));
   }
 
-  async writeAll(records) {
-    await fs.promises.writeFile(
-      this.filename,
-      JSON.stringify(records, null, 2),
-    );
+  getFileFormat(file) {
+    const nameToArray = file.originalname.split('.');
+    const format = nameToArray[nameToArray.length - 1];
+    return format;
   }
 
   randomId() {
@@ -46,4 +53,4 @@ class Repository {
   }
 }
 
-module.exports = new Repository('repository.json');
+module.exports = new Repository('fileRepository');

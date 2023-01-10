@@ -1,41 +1,33 @@
 const express = require('express');
-const {
-  requireEmail, requirePassword, requireEmailExists, requireValidPasswordForUser,
-} = require('./validators');
-const { handleValidationErrors } = require('./midleware/handleValidationErrors');
+const multer = require('multer');
 const { signUpPage, registerNewUser } = require('./controllers/signupController');
 const { signInPage, loginUser } = require('./controllers/signinController');
+const { asyncWrapper } = require('./midleware/asyncWrapper')
+
 
 const router = express.Router();
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/signup', signUpPage);
 
 router.post(
   '/signup',
-  requireEmail,
-  requirePassword,
-  handleValidationErrors(
-    'signup',
-    { title: 'Chat | SignUp' },
-  ),
-  registerNewUser,
+  upload.single('file'),
+  asyncWrapper(registerNewUser)
 );
 
-router.get('/signin', signInPage);
+router.get('/signin', asyncWrapper(signInPage));
 
 router.post(
   '/signin',
-  requireEmailExists,
-  requireValidPasswordForUser,
-  handleValidationErrors('signin', {
-    title: 'Chat | SignIn',
-  }),
-  loginUser,
+  upload.single('file'),
+  asyncWrapper(loginUser)
 );
 
-router.get('/signout', (req, res) => {
+router.post('/signout', (req, res) => {
   res.clearCookie('Authorization');
-  res.redirect('/signin');
+  res.status(302).json({ success: true });
 });
 
 router.get('/', (req, res) => {

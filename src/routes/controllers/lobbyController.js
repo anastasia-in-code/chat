@@ -7,20 +7,18 @@ const { getAvailableRooms } = require('../../helpers/getAvailableRooms');
  * @param {object} res - response object
  */
 const lobbyPage = async (req, res, next) => {
-  try {
-    const rooms = await getAvailableRooms();
-    const roomsNames = [];
-    rooms.forEach((room) => {
-      roomsNames.push({ name: room.name, link: room.link });
-    });
+  const rooms = await getAvailableRooms();
 
-    res.render('lobby', {
-      title: 'Chat | Lobby',
-      roomsNames,
-    });
-  } catch (e) {
-    next(e);
-  }
+  const roomsNames = rooms.map((room) => ({
+    name: room.name,
+    // eslint-disable-next-line no-underscore-dangle
+    id: room._id.toString(),
+  }));
+
+  res.render('lobby', {
+    title: 'Chat | Lobby',
+    roomsNames,
+  });
 };
 
 /**
@@ -29,18 +27,13 @@ const lobbyPage = async (req, res, next) => {
  * @param {object} res
  */
 const createNewRoom = async (req, res, next) => {
-  try {
-    const newRoom = new Room({
-      name: req.body.newroom,
-      link: `/${req.body.newroom.replace(' ', '_')}`,
-    });
+  const newRoom = new Room({
+    name: req.body.newRoom,
+  });
 
-    await newRoom.save();
+  await newRoom.save();
 
-    res.redirect('/lobby');
-  } catch (e) {
-    next(e);
-  }
+  res.send({ newRoom });
 };
 
 module.exports = { lobbyPage, createNewRoom };

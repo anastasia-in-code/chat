@@ -1,11 +1,10 @@
-<form class="block-panel" method="POST">
+   <a href="/signup" class="btn btn-lg btn-primary btn-block" type="submit">Don't have an account? Sign up</a>
    <h2 class="block-panel-heading">Sign in</h2>
    <input type="text" name="email" id="email" class="form-control credentials" value="{{emailValue}}" placeholder="Email address" required="" autofocus="">
-   <p class="validation" >{{errorsMsgs.email}}</p>
-   <input type="password" name="password" class="form-control credentials" placeholder="Password" required="">
-   <p class="validation" >{{errorsMsgs.password}}</p>
+   <input type="password" name="password" id="password" class="form-control credentials" placeholder="Password" required="">
+   <p class="validation" ></p>
    <label class="checkbox">
    <input type="checkbox" name="remember" value="remember-me"> Remember me
    </label>
-   <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-</form>
+   <button class="btn btn-lg btn-primary btn-block" id="loginButton">Login</button>
+   <script src="/js/signInAPI.js"></script>

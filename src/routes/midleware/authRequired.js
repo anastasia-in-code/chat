@@ -8,24 +8,27 @@ const config = require('../../../config');
  * @param {*} next
  */
 const authRequired = (req, res, next) => {
+  const token = req.headers.cookie;
+
+  if (!token) {
+    return res.redirect('/signin');
+  }
+
+  const tokenValue = token.split(';').find(cookie => {
+    return cookie.includes('Authorization')
+  }).split('=')[1]
+
+  let decoded = '';
   try {
-    const token = req.headers.cookie;
-
-    if (!token) {
-      return res.redirect('/signin');
-    }
-
-    const tokenValue = token.split('=')[1].split(';')[0];
-
-    const decoded = jwt.verify(tokenValue, config.secretKey);
-
-    req.userId = decoded.id;
-
-    next();
+    decoded = jwt.verify(tokenValue, config.secretKey);
   } catch (e) {
     res.clearCookie('Authorization');
-    res.redirect('/signin');
+    return res.redirect('/signin');
   }
+
+  req.userId = decoded.id;
+
+  return next();
 };
 
 module.exports = { authRequired };

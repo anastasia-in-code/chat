@@ -9,7 +9,12 @@ Here are some tips, these can help you start the project.
 2. SECRETKEY - use random value
 you can find the file named 'config.example', feel free to use it as a template
 
-Repository with files will be created automatically
+Repository with files and logcatalog will be created automatically
 
-There is usefull script to start the application
+Script to start the application:
 "npm run dev"
+
+Applcation routes:
+1. auth - registration and authenticaiton related pages (signIn, sigOut and signUp)
+2. lobby - lobby page where all available rooms are listed and new one can be created
+3. room - page for massage and files sharing

@@ -15,6 +15,7 @@ const lobbyRouter = require('./routes/lobby');
 const roomRouter = require('./routes/room');
 
 const { handleServerErrors } = require('./routes/midleware/handleServerErrors');
+const { handleNotFound } = require('./routes/midleware/handleNotFound')
 
 io.on('connection', () => {
   console.log('connected');
@@ -37,6 +38,8 @@ app.use(lobbyRouter);
 app.use(roomRouter);
 
 app.use(handleServerErrors);
+app.use(handleNotFound);
+
 
 startDb(config.dbPath);
 server.listen(config.port, () => {
@@ -59,4 +62,14 @@ process.on('SIGTERM', () => {
     console.log('server was closed');
     process.exit(0);
   });
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled rejection at ', promise, `reason: ${err.message}`)
+  process.exit(1)
+});
+
+process.on('uncaughtException', err => {
+  console.log(`Uncaught Exception: ${err.message}`)
+  process.exit(1)
 });

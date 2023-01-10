@@ -25,25 +25,17 @@
          {{{ body }}}
       </div>
           <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://code.jquery.com/jquery.js"></script>
+   <script src="https://code.jquery.com/jquery.js"></script>
 
-     <script src="/socket.io/socket.io.js"></script>
-     <script>  
-      let socket = io()
-      
-      socket.on('connect', () => {
-         socket.on('message', function(msg) {
-         location.reload()
-      });
-      });
+   <script src="/socket.io/socket.io.js"></script>
 
-   </script>
    <script>
     function scrollToBottom() {
         window.scrollTo(0, document.body.scrollHeight)
     }
     history.scrollRestoration = "manual"
     window.onload = scrollToBottom
-   </script>      
+   </script>   
+   <script src="/js/roomAPI.js"></script>
    </body>
 </html>
