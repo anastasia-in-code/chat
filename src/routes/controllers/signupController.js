@@ -22,8 +22,9 @@ const registerNewUser = async (req, res) => {
   const { email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
+
   if (existingUser) {
-    return res.send({ error: 'This email already in use' });
+    return res.status(400).json();
   }
 
   const hashPassword = await bcrypt.hash(password, 9);
@@ -36,7 +37,7 @@ const registerNewUser = async (req, res) => {
 
   await newUser.save();
 
-  res.status(200)
+  res.status(200).json({ success: true });
 };
 
 module.exports = { signUpPage, registerNewUser };

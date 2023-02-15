@@ -1,5 +1,4 @@
 const Room = require('../../models/rooms');
-const { getAvailableRooms } = require('../../helpers/getAvailableRooms');
 
 /**
  * function to render lobby page
@@ -7,7 +6,7 @@ const { getAvailableRooms } = require('../../helpers/getAvailableRooms');
  * @param {object} res - response object
  */
 const lobbyPage = async (req, res, next) => {
-  const rooms = await getAvailableRooms();
+  const rooms = await Room.find({});
 
   const roomsNames = rooms.map((room) => ({
     name: room.name,

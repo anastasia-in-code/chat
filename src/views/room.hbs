@@ -7,7 +7,7 @@
           {{#each messages}}
           <span class="message"><span class="user" style="color: #{{userColor}}">{{userName}}</span> {{messageText}}</span>
           {{#if file}}
-          <a href="/files/{{file}}" target=”_blank”>attached file</a>
+          <a href="/files/{{file}}" target=”_blank”>{{fileName}}</a>
           {{/if}}
         {{/each}}
         </div>

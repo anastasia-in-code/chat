@@ -37,11 +37,16 @@ createRoom.addEventListener('click', async () => {
       const error = new Error(`HTTP status code: ${response.status}`);
       error.response = response;
       error.status = response.status;
-      return alert(error);
+      return error;
     } return response.json();
   }).catch(console.error);
 
   const content = await rawResponse;
+
+  if (content.status >= 500) {
+    document.querySelector('.validation').innerText = 'Sorry something went wrong. Try again';
+    return null;
+  }
 
   // draw created room on UI
   if (content) {
@@ -54,7 +59,7 @@ createRoom.addEventListener('click', async () => {
 
 // signout button event listener
 signOut.addEventListener('click', async () => {
-  const responseRow = await fetch('http://localhost:3000/signout', {
+  const responseRow = await fetch(`${window.location.origin}/signout`, {
     method: 'POST',
   }).then((response) => response.json()).catch(console.error);
 

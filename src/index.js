@@ -15,7 +15,7 @@ const lobbyRouter = require('./routes/lobby');
 const roomRouter = require('./routes/room');
 
 const { handleServerErrors } = require('./routes/midleware/handleServerErrors');
-const { handleNotFound } = require('./routes/midleware/handleNotFound')
+const { handleNotFound } = require('./routes/midleware/handleNotFound');
 
 io.on('connection', () => {
   console.log('connected');
@@ -40,7 +40,6 @@ app.use(roomRouter);
 app.use(handleServerErrors);
 app.use(handleNotFound);
 
-
 startDb(config.dbPath);
 server.listen(config.port, () => {
   console.log('Server has been started...');
@@ -48,28 +47,25 @@ server.listen(config.port, () => {
 
 app.set('socketio', io);
 
-process.on('SIGINT', () => {
-  console.log('receiving SIGINT');
-  server.close(() => {
-    console.log('server was closed');
-    process.exit(0);
+const operateSignal = (signal) => {
+  process.on(signal, () => {
+    console.log(`receiving ${signal}`);
+    server.close(() => {
+      console.log('server was closed');
+      process.exit(0);
+    });
   });
+};
+
+operateSignal('SIGINT');
+operateSignal('SIGTERM');
+
+process.on('unhandledRejection', (err, promise) => {
+  console.log('Unhandled rejection at ', promise, `reason: ${err.message}`);
+  process.exit(1);
 });
 
-process.on('SIGTERM', () => {
-  console.log('receiving SIGTERM');
-  server.close(() => {
-    console.log('server was closed');
-    process.exit(0);
-  });
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.log('Unhandled rejection at ', promise, `reason: ${err.message}`)
-  process.exit(1)
-});
-
-process.on('uncaughtException', err => {
-  console.log(`Uncaught Exception: ${err.message}`)
-  process.exit(1)
+process.on('uncaughtException', (err) => {
+  console.log(`Uncaught Exception: ${err.message}`);
+  process.exit(1);
 });

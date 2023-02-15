@@ -27,16 +27,24 @@ registerButton.addEventListener('click', async () => {
     method: 'POST',
     body,
   }).then((response) => {
-    if(response.ok) {
-      window.location.href = '/signin';
-    }
+    if (!response.ok) {
+      const error = new Error(`HTTP status code: ${response.status}`);
+      error.response = response;
+      error.status = response.status;
+      return error;
+    } return response.json();
   }).catch(console.error);
 
   const content = await responseRow;
 
   // if user entered invalid data, show validation error message
-  if (content.error) {
-    document.querySelector('.validation').innerText = content.error;
+  if (content.status === 400) {
+    document.querySelector('.validation').innerText = 'this email is already in use';
     return null;
+  }
+
+  // if user entered valid data, redirect to signin page
+  if (content.success) {
+    window.location.href = '/signin';
   }
 });

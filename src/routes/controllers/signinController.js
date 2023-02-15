@@ -24,13 +24,13 @@ const loginUser = async (req, res, next) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.send({ error: 'invalid email or password' });
+    return res.status(401).json({ success: false });
   }
 
   const validPassword = await bcrypt.compare(req.body.password, user.password);
 
   if (!validPassword) {
-    return res.send({ error: 'invalid email or password' });
+    return res.status(401).json({ success: false });
   }
 
   const token = generateJWT(user._id, user.email, { expiresIn: req.body.remember ? '24h' : '1h' });

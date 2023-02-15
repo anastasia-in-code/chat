@@ -11,6 +11,9 @@ const messageSchema = new mongoose.Schema({
   messageFileId: {
     type: String,
   },
+  messageFileName: {
+    type: String,
+  },
   userName: {
     type: String,
   },

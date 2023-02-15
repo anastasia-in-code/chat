@@ -22,7 +22,7 @@ sendButton.addEventListener('click', async () => {
   body.append('message', message);
   body.append('file', file.files[0]);
 
-  await fetch(document.URL, {
+  const content = await fetch(document.URL, {
     method: 'POST',
     body,
   }).then((response) => {
@@ -30,9 +30,14 @@ sendButton.addEventListener('click', async () => {
       const error = new Error(`HTTP status code: ${response.status}`);
       error.response = response;
       error.status = response.status;
-      return alert(error);
-    }
+      return error;
+    } return response.json()
   }).catch(console.error);
+
+  if (content.status >= 500) {
+    document.querySelector('.validation').innerText = 'Sorry something went wrong. Try again';
+    return null;
+  }
 
   // delete inform message on sending the first message
   const empty = document.querySelector('.message');
@@ -46,7 +51,7 @@ sendButton.addEventListener('click', async () => {
 
 // signout button event listener
 signOut.addEventListener('click', async () => {
-  const responseRow = await fetch('http://localhost:3000/signout', {
+  const responseRow = await fetch(`${window.location.origin}/signout`, {
     method: 'POST',
   }).then((response) => response.json()).catch(console.error);
 
@@ -62,7 +67,7 @@ socket.on('connect', () => {
     if (document.URL.includes(msg.roomId)) {
       let newMessage = `<span class="message"><span class="user" style="color: #${msg.userColor}">${msg.userName}</span> ${msg.messageText}</span>`;
       if (msg.messageFileId) {
-        newMessage += `<a href="/files/${msg.messageFileId}" target="”_blank”">attached file</a>`;
+        newMessage += `<a href="/files/${msg.messageFileId}" target="”_blank”">${msg.messageFileName}</a>`;
       }
       chat.innerHTML += newMessage;
     }
@@ -70,5 +75,5 @@ socket.on('connect', () => {
 });
 
 socket.on('disconnect', () => {
-  console.log('user was disconnected');
+  socket.connect();
 });

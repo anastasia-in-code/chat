@@ -47,6 +47,7 @@ const sendMessage = async (req, res, next) => {
   if (req.file) {
     const savedFile = await repository.create(req.file);
     newMessage.messageFileId = `${savedFile.id}.${savedFile.format}`;
+    newMessage.messageFileName = req.file.originalname;
   }
 
   await newMessage.save();

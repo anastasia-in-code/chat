@@ -5,7 +5,7 @@ const Message = require('../models/message');
  * @param {string} roomId  - room id to get messages for
  * @returns {Array} - array with list of posted messages
  */
-const showgetRoomMessages = async (roomId) => {
+const getRoomMessages = async (roomId) => {
   const allMessages = await Message.find({ roomId });
   const messages = [];
 
@@ -18,6 +18,7 @@ const showgetRoomMessages = async (roomId) => {
 
     if (message.messageFileId) {
       generatedMessage.file = message.messageFileId;
+      generatedMessage.fileName = message.messageFileName;
     }
 
     messages.push(generatedMessage);
@@ -32,4 +33,4 @@ const showgetRoomMessages = async (roomId) => {
   return messages;
 };
 
-module.exports = showgetRoomMessages;
+module.exports = getRoomMessages;

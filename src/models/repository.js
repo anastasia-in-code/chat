@@ -24,11 +24,9 @@ class Repository {
   }
 
   async getOne(id) {
-    return JSON.parse(
-      await fs.promises.readFile(`${this.dir}/${id}`, {
-        encoding: 'utf8',
-      }),
-    );
+    await fs.promises.readFile(`${this.dir}/${id}`, {
+      encoding: 'utf8',
+    });
   }
 
   async saveFile(file) {
