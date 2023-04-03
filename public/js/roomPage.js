@@ -31,7 +31,7 @@ sendButton.addEventListener('click', async () => {
       error.response = response;
       error.status = response.status;
       return error;
-    } return response.json()
+    } return response.json();
   }).catch(console.error);
 
   if (content.status >= 500) {
